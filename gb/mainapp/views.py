@@ -1,24 +1,20 @@
 from multiprocessing import context
 from django.shortcuts import render
 import json
+from .models import Category, Product
 
 # Create your views here.
 def main(request):
-    return render(request, 'mainapp/index.html')
+    context = {'category': Category.objects.all(), 'product': Product.objects.all()}
+    return render(request, 'mainapp/index.html', context)
 
 def products(request):
-    with open('file.json', 'w') as f:
-        json.dump([
-        {'href': 'products_all', 'title': 'все'},
-        {'href': 'products_home', 'title': 'дом'},
-        {'href': 'products_office', 'title': 'офис'},
-        {'href': 'products_modern', 'title': 'модерн'},
-        {'href': 'products_classic', 'title': 'классика'},
-    ], f)
-    with open('file.json') as f:
-        links_menu = json.loads(f.read())
-    context = {'links_menu': links_menu}
+    context = {'category': Category.objects.all(), 'product': Product.objects.all()}
     return render(request, 'mainapp/products.html', context)
+
+def products_category(requests, pk=None):
+    context = {'category': Category.objects.all(), 'product': Product.objects.all()}
+    return render(requests, 'mainapp/products.html', context)
 
 def contact(request):
     return render(request, 'mainapp/contact.html')
